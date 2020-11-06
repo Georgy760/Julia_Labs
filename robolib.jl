@@ -19,7 +19,7 @@ function mark_MoveBack!(r::Robot)
             move!(r,side)
             putmarker!(r)
         end
-        
+
         while ismarker(r) == true
             move!(r, invers(side)) 
         end
@@ -34,5 +34,24 @@ perimetr!
 РЕЗУЛЬТАТ: Робот - в исходном положении, и все клетки по периметру внешней рамки промакированы
 """
 function perimetr!(r::Robot)
+    left = 0
+    down = 0
+    
+    while isborder(r, West)==false
+        move!(r,West)
+        left +=1
+    end
+    while isborder(r, Sud)==false
+        move!(r,Sud)
+        down +=1
+    end
+    println("Left: ", left)
+    print("Down: ", down)
 
+    for side in (Nord, Ost, Sud, West)
+        while isborder(r, side)==false
+            move!(r,side)
+            putmarker!(r)
+        end
+    end
 end
