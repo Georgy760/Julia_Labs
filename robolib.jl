@@ -25,7 +25,7 @@ function mark_MoveBack(r::Robot)
         end
     end
     putmarker!(r)
-end
+end 
 
 """
 perimetr
@@ -34,5 +34,5 @@ perimetr
 РЕЗУЛЬТАТ: Робот - в исходном положении, и все клетки по периметру внешней рамки промакированы
 """
 function perimetr(r::Robot)
-    
+
 end
