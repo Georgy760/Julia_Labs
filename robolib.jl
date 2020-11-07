@@ -45,13 +45,19 @@ function perimetr!(r::Robot)
         move!(r,Sud)
         down +=1
     end
-    println("Left: ", left)
-    print("Down: ", down)
 
     for side in (Nord, Ost, Sud, West)
         while isborder(r, side)==false
             move!(r,side)
             putmarker!(r)
         end
+    end
+
+    for _ in 1:down
+        move!(r,Nord)
+    end
+
+    for _ in 1:left
+        move!(r,Ost)
     end
 end
