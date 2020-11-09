@@ -50,7 +50,7 @@ function task3!(r::Robot) #заполнение всего поля маркер
     #УТВ: Робот - в исходном положении
 end
 
-function task4(r::Robot)
+function task4!(r::Robot)
     num_vert = moves!(r, Sud)
     num_hor = moves!(r, West)
     #УТВ: Робот - в Юго-Западном углу
@@ -77,4 +77,8 @@ function task4(r::Robot)
     movements!(r, Ost, num_hor)
 
     #УТВ: Робот - в исходном положении
+end
+
+function task5!(r::Robot)
+    
 end
