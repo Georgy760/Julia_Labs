@@ -51,4 +51,39 @@ function find_border!(r::Robot, direction_to_border::HorizonSide, direction_of_m
     #УТВ: непосредственно справа от Робота - внутренняя пергородка
 end
 
-# 7 - ф-ия {Дойти до }
+# 7 - ф-ия {движение змейкой с простановкой маркеров}
+function snake!(r::Robot,side::HorizonSide) 
+    while isborder(r,side) == false #пока нет стенки идем в сторону side и ставим маркеры
+        putmarker!(r)
+        move!(r,side)
+    end
+
+    if (isborder(r,Nord) == false)#Передвигаемся на одну строчку вверх
+        putmarker!(r)
+        move!(r,Nord)
+        side = invers(side::HorizonSide)
+        mark_row!(r,side)
+    end
+end
+
+# 8 - ф-ия 
+function mark_row!(r::Robot,side::HorizonSide)
+    while isborder(r,side) == false #пока нет стенки идем в сторону side и ставим маркеры
+        putmarker!(r)
+        move!(r,side)
+    end
+    if (isborder(r,Nord) == false)#Передвигаемся на одну строчку вверх
+        putmarker!(r)
+        move!(r,Nord)
+        side = invers(side::HorizonSide)
+        mark_row!(r,side)
+    end
+end
+
+# 9 - ф-ия {движение до стенки с простановкой маркеров}
+function putmarkers_until_border!(r::Robot, side::HorizonSide)
+    while isborder(r,side)==false
+        move!(r,side)
+        putmarker!(r)
+    end
+end
