@@ -126,3 +126,82 @@ function through_rectangles_into_angle(r,angle::NTuple{2,HorizonSide})
     end
     return num_steps
 end
+
+function mark_innerrectangle_perimetr!(r::Robot, side::HorizonSide)
+
+    direction_of_movement, direction_to_border = get_directions(side)
+
+    for i ∈ 1:4   
+        # надо ставить маркеры вдоль очередной стороны внутренней перегородки 
+        # (перемещаться надо в одном направлении, а следить за перегородеой в - 
+        # перпендикулярном ему)
+        putmarkers!(r,  direction_of_movement[i], direction_to_border[i]) 
+    end
+end
+
+function get_directions(side::HorizonSide)
+    if side == Nord # - обход будет по часовой стрелке      
+        return (Nord,Ost,Sud, West), (Ost,Sud,West,Nord)
+    else # - обход будет против часовой стрелки
+        return (Sud,Ost,Nord,West), (Ost,Nord,West,Sud) 
+    end
+end
+
+function putmarkers!(r::Robot, direction_of_movement::HorizonSide, direction_to_border::HorizonSide)
+    while isborder(r,direction_to_border)==true
+        move!(r,direction_of_movement)
+    end
+end
+
+function putmarks1!(r::Robot,side::HorizonSide)
+    movements!(r,invers(side))
+    move!(r,side)
+    while isborder(r,side) == false        
+        putmarker!(r)
+        for _ in 1:2
+            if (isborder(r,side) == false)
+                move!(r,side)
+            else
+                if (isborder(r,Nord) == fasle)
+                    move!(r,Nord)
+                    side = invers(side)
+                    move!(r,side)
+                end
+            end
+        end
+    end
+    putmarker!(r)
+    if (isborder(r,Nord) == false)
+        move!(r,Nord)
+        putmarks2!(r,Ost)
+    end
+end
+
+
+function putmarks2!(r::Robot,side::HorizonSide)
+    movements!(r,invers(side))
+    while isborder(r,side) == false
+        putmarker!(r)
+        for _ in 1:2
+            if (isborder(r, side) == false)
+                move!(r,side)
+            else
+                if (isborder(r,Nord) == false)
+                    move!(r,Nord)
+                    side = invers(side)
+                end
+            end
+        end
+    end
+end
+
+next(side::HorizonSide)=HorizonSide(mod(Int(side)+1,4))
+
+function find_marker(r,side,num_steps_max)
+    for _ in 1:num_steps_max
+        if ismarker(r)
+            return nothing
+        end
+        move!(r,side)
+    end
+end

@@ -10,9 +10,13 @@ using HorizonSideRobots
 
 include("robolib.jl") #библиотека с вспомогательными функциями
 
+invers(side::HorizonSide) = HorizonSide(mod(Int(side) + 2,4))
+
 #УТВ: Робот - в произвольной клетке ограниченного прямоугольного поля
 
-function mark_innerrectangle_perimetr!(r::Robot)
+# Задача 6
+
+function task6!(r::Robot)
     num_steps=fill(0,3) # - вектор-столбец из 3-х нулей
     for (i,side::HorizonSide) in enumerate((Sud,West,Sud))
         num_steps[i]=moves!(r,side)
@@ -35,28 +39,48 @@ function mark_innerrectangle_perimetr!(r::Robot)
     #УТВ: Робот - в исходном положении
 end
 
-function mark_innerrectangle_perimetr!(r::Robot, side::HorizonSide)
+# Задача 7
 
-    direction_of_movement, direction_to_border = get_directions(side)
+function task7!(r::Robot)
+     num_hor = moves!(r,West)
+     num_vert = moves!(r,Sud)
+    #Левый нижний угол
 
-    for i ∈ 1:4   
-        # надо ставить маркеры вдоль очередной стороны внутренней перегородки 
-        # (перемещаться надо в одном направлении, а следить за перегородеой в - 
-        # перпендикулярном ему)
-        putmarkers!(r,  direction_of_movement[i], direction_to_border[i]) 
+    side = Ost
+    if ((num_hor % 2) == 0) #если слево расстояние четна
+        if ((num_vert % 2) == 0) # если вертикаль четна
+            putmarks2!(r,side)
+        else # если вертикаль нечетна
+            putmarks1!(r,side)
+        end
+    else
+        putmarks1!(r,side)
+    end
+    #алгоритм - выполнен
+
+    movements!(r,West)
+    movements!(r,Sud)
+
+    movements!(r,Ost,num_hor)
+    movements!(r,Nord,num_vert)
+end
+
+# Задача 9
+
+function task9!(r)
+    num_steps_max=1
+    side=Nord
+    while ismarker(r)==false
+        for _ in 1:2
+            find_marker(r,side,num_steps_max)
+            side=next(side)
+        end
+        num_steps_max+=1
     end
 end
 
-function get_directions(side::HorizonSide)
-    if side == Nord # - обход будет по часовой стрелке      
-        return (Nord,Ost,Sud, West), (Ost,Sud,West,Nord)
-    else # - обход будет против часовой стрелки
-        return (Sud,Ost,Nord,West), (Ost,Nord,West,Sud) 
-    end
-end
 
-function putmarkers!(r::Robot, direction_of_movement::HorizonSide, direction_to_border::HorizonSide)
-    while isborder(r,direction_to_border)==true
-        move!(r,direction_of_movement)
-    end
-end
+
+
+
+
