@@ -1,6 +1,8 @@
 inverse(side::DirectionsOfMovement) = DirectionsOfMovement(mod(Int(side)+2, 4))
 nextDirection(side::DirectionsOfMovement)=DirectionsOfMovement(mod(Int(side)+1,4))
 prevDirection(side::DirectionsOfMovement)=DirectionsOfMovement(mod(Int(side)-1,4))
+next_side(side::DirectionsOfMovement)= DirectionsOfMovement(mod(Int(side)+1,4))
+prev_side(side::DirectionsOfMovement)= DirectionsOfMovement(mod(Int(side)-1,4))
 
 MoveByMarkers(r::Robot,side::DirectionsOfMovement) = while ismarker(r)==true
     move!(r,side)
@@ -46,10 +48,6 @@ function movements!(r::Robot,side::DirectionsOfMovement,num_steps::Int) #воз�
     end
 end
 
-move_by_markers(r::Robot,side::DirectionsOfMovement) = while ismarker(r)==true
-    move!(r,side)
-end
-
 function get_num_steps_movements!(r::Robot, side::DirectionsOfMovement) #запоминаем кол-во шагов в направлении side
     num_steps = 0
     while isborder(r, side) == false #пока нет стенки идем в направлении side\запоминаем кол-во шагов\маркеруем их
@@ -62,6 +60,12 @@ function get_num_steps_movements!(r::Robot, side::DirectionsOfMovement) #зап�
     end
     return num_steps
 end
+
+move_by_markers(r::Robot,side::DirectionsOfMovement) = while ismarker(r)==true
+    move!(r,side)
+end
+
+
 
 function movements!(r::Robot,side::DirectionsOfMovement) #идем в направлении side до стенки
     while isborder(r,side) == false
